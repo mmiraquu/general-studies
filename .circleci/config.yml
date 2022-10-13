@@ -1,26 +1,64 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine.
 # See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
+orbs:
+  win: circleci/windows@5.0.0
 
 # Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
-  say-hello:
+  build-for-linux:
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
+      # A base Ubuntu Docker image built to run on CircleCI
       - image: cimg/base:stable
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
+      # Checkout code 
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+          command: "g++ -std=c++17 src/helloworld.cpp"
+  
+  build-for-macos:
+    macos:
+      xcode: 14.0.0
+    steps:
+      - checkout
+      - run:
+          command: "g++ -std=c++17 src/helloworld.cpp"
+
+  build-for-windows:
+    executor:
+      name: win/default
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore MinGW cache
+          keys:
+            - mingw-cache-v1-{{ .Branch }}
+            - mingw-cache-v1
+      - run:
+          # Install g++ using Choco
+          # https://discuss.circleci.com/t/how-to-get-a-c-compiler-with-circleci/37636/2
+          name: Install mingw/g++ using Choco
+          # -y confirms to proceed in the installation steps
+          command: "choco install mingw -y"
+      - save_cache:
+          name: Save MinGW cache
+          key: mingw-cache-v1-{{ .Branch }}
+          paths:
+            - C:/ProgramData/Chocolatey
+      - run: 
+          name: Compile
+          command: "g++ -std=c++17 src/helloworld.cpp"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  build-workflow:
     jobs:
-      - say-hello
+      - build-for-linux
+      - build-for-macos
+      - build-for-windows
