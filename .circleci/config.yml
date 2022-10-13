@@ -18,6 +18,14 @@ jobs:
       - checkout
       - run:
           command: "g++ -std=c++17 src/helloworld.cpp"
+  
+  build-for-macos:
+    macos:
+      xcode: 14.0.0
+    steps:
+      - checkout
+      - run:
+          command: "g++ -std=c++17 src/helloworld.cpp"
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -25,3 +33,4 @@ workflows:
   build-workflow:
     jobs:
       - build-for-linux
+      - build-for-macos
