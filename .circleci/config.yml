@@ -34,11 +34,11 @@ jobs:
       name: win/default
     steps:
       - checkout
-      - restore_cache:
-          name: Restore MinGW cache
-          keys:
-            - mingw-cache-v1-{{ .Branch }}
-            - mingw-cache-v1
+      #- restore_cache:
+      #    name: Restore MinGW cache
+      #    keys:
+      #      - mingw-cache-v1-{{ .Branch }}
+      #      - mingw-cache-v1
       - run:
           # Install g++ using Choco
           # https://discuss.circleci.com/t/how-to-get-a-c-compiler-with-circleci/37636/2
@@ -50,6 +50,9 @@ jobs:
           key: mingw-cache-v1-{{ .Branch }}
           paths:
             - C:/ProgramData/Chocolatey
+      - run:
+          name: Show Chocolatey directory
+          command: "ls C:/ProgramData/Chocolatey"
       - run: 
           name: Compile
           command: "g++ -std=c++17 src/helloworld.cpp"
