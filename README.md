@@ -17,15 +17,29 @@ I'll add notes below as I work on the setup
 
 ## Build automation
 
-### Linux
+The builds are done with the basic command 
+
+```
+g++ -std=c++17 src/helloworld.cpp
+```
+
+According to [LearnCpp.com](https://www.learncpp.com/), it could be useful to 
+
+- Treat warnings as errors `-Werror`. Possible warnings would not build up and they would have to be solved immediately. 
+- Disable compiler extensions `-pedantic-errors`
+- Turn warning levels up `-Wall -Weffc++ -Wextra -Wsign-conversion`
+
+I wonder if these would overlap with what SonarCloud does in the static analysis.
+
+## Linux
 
 Linux build is done on an [Ubuntu docker image](https://circleci.com/developer/images/image/cimg/base 'CircleCI - Images - Base').
 
-### MacOS
+## MacOS
 
 MacOS builds are done on a [virtual machine](https://circleci.com/docs/using-macos/ 'CircleCI - Using macOS'). [Xcode supports building universal binaries that can be run on both x86_64 and ARM64 CPU architectures.](https://circleci.com/docs/using-macos/#xcode-cross-compilation 'CircleCI - MacOS - Xcode cross compilation')
 
-### Windows
+## Windows
 
 Windows build uses a [Windows orb](https://circleci.com/developer/orbs/orb/circleci/windows 'CircleCI - Orbs - Windows'). 
 
@@ -35,3 +49,7 @@ Notes on cache
 
 - The cache is stored for 15 days. 
 - Jobs in one workflow can share caches.
+
+# SonarCloud
+
+Static analysis is set up using SonarCloud. When code and tests will be added, required test coverage must be set.
