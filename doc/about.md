@@ -2,7 +2,7 @@
 
 Welcome to this introductory documentation. Let's have a look at a delicious pie first.
 
-::: mermaid
+``` mermaid
 pie title Pie
 
 "Flour" : 45
@@ -11,4 +11,4 @@ pie title Pie
 "Sugar" : 10
 "Vanilla" : 5
 
-:::
+```
